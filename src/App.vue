@@ -22,7 +22,9 @@
       :style="{
         backgroundSize: clientWidth < widthMobileVersion ? '13px' : '16px',
       }"
-    ></div>
+    >
+      <visual-editor />
+    </div>
     <template v-if="clientWidth < widthMobileVersion">
       <div class="rent-container-bottom">
         <rent-truck-crane />
@@ -34,12 +36,14 @@
 <script>
 import ParameterInput from "./components/ParameterInput";
 import RentTruckCrane from "@/components/RentTruckCrane";
+import VisualEditor from "@/components/VisualEditor";
 
 export default {
   name: "App",
   components: {
     ParameterInput,
     RentTruckCrane,
+    VisualEditor,
   },
   data() {
     return {
@@ -80,7 +84,7 @@ export default {
       if (fullWidth < this.widthMobileVersion) {
         numberOfSquares -= 2;
       }
-      const craneColumnWidth = numberOfSquares * this.backgroundSize - 2;
+      const craneColumnWidth = numberOfSquares * this.backgroundSize;
       widthInPercent !== 100
         ? (this.columnSizes = `1fr ${craneColumnWidth}px`)
         : (this.columnSizes = `${craneColumnWidth}px`);
@@ -93,7 +97,7 @@ export default {
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
-// удалить в конечном билде
+// удалить body в конечном билде
 body {
   padding: 0;
   margin: 0;
@@ -102,6 +106,7 @@ body {
 
 #calculator {
   max-width: 908px;
+  // удалить margin в конечном билде
   margin: 40px auto;
 }
 .calc {
