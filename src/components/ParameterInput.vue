@@ -1,29 +1,31 @@
 <template>
-  <h4
-    class="block-title"
-    :style="{
-      padding: mobileWidth ? '12px 0 11px 0' : '12px 0 11px 12px',
-    }"
-  >
-    Выберите необходимые параметры
-  </h4>
-  <div
-    class="title-border"
-    :style="{ display: mobileWidth ? 'block' : 'none' }"
-  ></div>
-  <div class="input-container">
-    <div
-      class="input-wrapper"
-      :style="{ padding: mobileWidth ? '0' : '0 12px' }"
+  <div>
+    <h4
+      class="block-title"
+      :style="{
+        padding: mobileWidth ? '12px 0 11px 0' : '12px 0 11px 12px',
+      }"
     >
-      <div v-for="row of parameter" :key="row.id">
-        <div class="input-row">
-          <span>{{ row.title }}</span>
-          <input type="text" v-model="row.value" />
+      Выберите необходимые параметры
+    </h4>
+    <div
+      class="title-border"
+      :style="{ display: mobileWidth ? 'block' : 'none' }"
+    ></div>
+    <div class="input-container">
+      <div
+        class="input-wrapper"
+        :style="{ padding: mobileWidth ? '0' : '0 12px' }"
+      >
+        <div v-for="row of parameter" :key="row.id">
+          <div class="input-row">
+            <span>{{ row.title }}</span>
+            <input type="text" v-model="row.value" />
+          </div>
         </div>
       </div>
+      <slot></slot>
     </div>
-    <slot></slot>
   </div>
 </template>
 
@@ -35,10 +37,18 @@ export default {
       type: Array,
       required: true,
     },
+    clientWidth: {
+      type: Number,
+      required: true,
+    },
+    widthMobileVersion: {
+      type: Number,
+      required: true,
+    },
   },
   computed: {
     mobileWidth() {
-      return this.$root.clientWidth < this.$root.widthMobileVersion;
+      return this.clientWidth < this.widthMobileVersion;
     },
   },
 };

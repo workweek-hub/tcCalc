@@ -1,4 +1,4 @@
-# mobile-crane-calculator
+# truck-crane-calculator
 
 ## Project setup
 ```

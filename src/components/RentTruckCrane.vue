@@ -1,8 +1,10 @@
 <template>
-  <button id="rentCrane">Арендовать автокран</button>
-  <p>
-    Или позвоните нам по телефону <span>+78129931733</span> и мы поможем вам
-  </p>
+  <div>
+    <button id="rentCrane">Арендовать автокран</button>
+    <p>
+      Или позвоните нам по телефону <span>+78129931733</span> и мы поможем вам
+    </p>
+  </div>
 </template>
 
 <script>

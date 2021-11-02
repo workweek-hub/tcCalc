@@ -1,4 +1,11 @@
-import { createApp } from "vue";
+import Vue from "vue";
 import App from "./App.vue";
+import VueKonva from "vue-konva";
 
-createApp(App).mount("#calculator");
+Vue.use(VueKonva);
+
+Vue.config.productionTip = false;
+
+new Vue({
+  render: (h) => h(App),
+}).$mount("#calculator");
