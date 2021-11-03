@@ -22,7 +22,13 @@
         <div v-for="row of parameter" :key="row.id">
           <div class="input-row">
             <span>{{ row.title }}</span>
-            <input type="text" v-model="row.value" />
+            <input
+              type="text"
+              v-model="row.value"
+              @keypress="isNumber($event)"
+              @blur="defaultNumber(row.id, row.value)"
+              @input="inputValidation(row.id, row.value)"
+            />
           </div>
         </div>
       </div>
@@ -51,6 +57,48 @@ export default {
     },
   },
   computed: {},
+  methods: {
+    isNumber: function (evt) {
+      evt = evt ? evt : window.event;
+      let charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
+    inputValidation(id, num) {
+      let param = this.parameter.find((item) => item.id === id);
+      if (id === "liftingHeight" && Number(num) > 99) {
+        param.value = 99;
+      }
+      if (id === "cargoWeight" && Number(num) > 500) {
+        param.value = 500;
+      }
+      if (id === "cargoHeight" && Number(num) > 99) {
+        param.value = 99;
+      }
+    },
+    defaultNumber(id, num) {
+      let param = this.parameter.find((item) => item.id === id);
+      if (id === "stickLength" && Number(num) < 4) {
+        param.value = 4;
+      }
+      if (id === "liftingHeight" && Number(num) < 1) {
+        param.value = 1;
+      }
+      if (id === "cargoHeight" && Number(num) < 1) {
+        param.value = 1;
+      }
+      if (id === "cargoWeight" && Number(num) < 0.1) {
+        param.value = 0.1;
+      }
+    },
+  },
   watch: {
     mobileVersion() {
       !this.mobileVersion ? (this.height = "397px") : (this.height = "auto");

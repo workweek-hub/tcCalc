@@ -30,6 +30,8 @@
         <visual-editor
           :size="{ width: size.width - 2, height: size.height - 2 }"
           :mobileVersion="moduleWidth < widthMobileVersion"
+          :parameter="parameter"
+          :stickInput="parameter[3]"
         />
       </div>
       <template v-if="moduleWidth < widthMobileVersion">
@@ -101,7 +103,7 @@ export default {
       widthInPercent !== 100
         ? (this.columnSizes = `1fr ${craneColumnWidth}px`)
         : (this.columnSizes = `${craneColumnWidth}px`);
-      this.size = { width: craneColumnWidth, height: craneSectionHeight };
+      this.size = { width: craneColumnWidth, height: craneSectionHeight + 2 };
       this.moduleWidth = fullWidth;
     },
   },

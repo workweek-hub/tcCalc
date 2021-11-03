@@ -1,14 +1,20 @@
 <template>
   <v-stage :config="configKonva">
     <v-layer>
+      <v-text :config="configStickLengthText"></v-text>
+      <v-image :config="configLiftingHeight"></v-image>
+      <v-rect :config="configBase" v-if="!mobileVersion"></v-rect>
       <v-line :config="configLine"></v-line>
       <v-group :config="configGroup">
         <v-rect :config="configRect"></v-rect>
         <v-image :config="configArrow"></v-image>
+        <v-text :config="configStickLength"></v-text>
+        <v-image :config="configStickSize"></v-image>
       </v-group>
       <v-image :config="configHook"></v-image>
       <v-image :config="configHead" ref="head"></v-image>
-      <v-rect :config="configCargo" ref="cargo">></v-rect>
+      <v-text :config="configCargoWeight"></v-text>
+      <v-rect :config="configCargo" ref="cargo"></v-rect>
       <v-image :config="configTruck"></v-image>
     </v-layer>
   </v-stage>
@@ -27,6 +33,14 @@ export default {
       required: true,
       default: false,
     },
+    parameter: {
+      type: Array,
+      required: true,
+    },
+    stickInput: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
@@ -40,11 +54,14 @@ export default {
       arrow: new Image(),
       head: new Image(),
       hook: new Image(),
+      liftingHeight: new Image(),
+      stickSize: new Image(),
       headPosition: { x: 308, y: 264 },
       mainLength: 239,
       stickLength: 41,
       rotation: -16.31,
       created: false,
+      drag: false,
     };
   },
   created() {
@@ -55,6 +72,8 @@ export default {
     this.arrow.src = require("@/assets/images/arrow.svg");
     this.head.src = require("@/assets/images/head.svg");
     this.hook.src = require("@/assets/images/hook.svg");
+    this.stickSize.src = require("@/assets/images/size.svg");
+    this.liftingHeight.src = require("@/assets/images/height.svg");
     this.$nextTick().then(() => {
       this.headPosition = {
         x: 308 / this.coefficient,
@@ -68,11 +87,12 @@ export default {
     const head = this.$refs.head.getNode();
     const cargo = this.$refs.cargo.getNode();
     head.addEventListener("dragmove", () => {
+      this.drag = true;
       let headX = head.x();
       let headY = head.y();
       const maxX = 420 / this.coefficient;
       const minX = 308 / this.coefficient;
-      const minY = 80 / this.coefficient;
+      const minY = (!this.mobileVersion ? 113 : 102) / this.coefficient;
       const maxY = this.offset.y - (!this.mobileVersion ? 84 : 47);
       if (headX > maxX) {
         headX = maxX;
@@ -96,15 +116,25 @@ export default {
       this.rotation = Math.atan(length / height) * 57.2958;
       this.stickLength = totalStickLength - this.mainLength;
       this.headPosition = { x: headX, y: headY };
+      let meterLength =
+        ((this.mobileVersion ? 8.55 : 4.95) * this.stickLength) /
+        (236 / this.coefficient);
+      this.stickInput.value = (
+        (this.stickLength / 11.875) *
+        meterLength
+      ).toFixed(0);
     });
     cargo.addEventListener("dragmove", () => {
+      this.drag = true;
       const cargoWidth = 99 / this.coefficient;
       const cargoHeight = 86 / this.coefficient;
       const maxX =
         420 / this.coefficient - cargoWidth / 2 + 9 / this.coefficient;
       const minX =
         308 / this.coefficient - cargoWidth / 2 + 9 / this.coefficient;
-      const minY = 80 / this.coefficient + (cargoHeight + 7 / this.coefficient);
+      const minY =
+        (!this.mobileVersion ? 113 : 108) / this.coefficient +
+        (cargoHeight + 7 / this.coefficient);
       const maxY =
         this.offset.y -
         (!this.mobileVersion ? 102 : 55) +
@@ -133,6 +163,19 @@ export default {
       this.rotation = Math.atan(length / height) * 57.2958;
       this.stickLength = totalStickLength - this.mainLength;
       this.headPosition = { x: headX, y: headY };
+      let meterLength =
+        ((this.mobileVersion ? 8.55 : 4.95) * this.stickLength) /
+        (236 / this.coefficient);
+      this.stickInput.value = (
+        (this.stickLength / 11.875) *
+        meterLength
+      ).toFixed(0);
+    });
+    head.addEventListener("dragend", () => {
+      this.drag = false;
+    });
+    cargo.addEventListener("dragend", () => {
+      this.drag = false;
     });
   },
   computed: {
@@ -215,6 +258,20 @@ export default {
         draggable: true,
       };
     },
+    configCargoWeight() {
+      let text = this.parameter.find((item) => item.id === "cargoWeight").value;
+      const width = 99 / this.coefficient;
+      // const height = 80 / this.coefficient;
+      return {
+        text: `${text}т`,
+        fontSize: 14 / this.coefficient,
+        // fontFamily: 'Roboto',
+        // fontStyle: 'bold',
+        fill: "#27262C",
+        x: this.headPosition.x - width / 4 + 20 / this.coefficient,
+        y: this.headPosition.y + 119 / this.coefficient + 6,
+      };
+    },
     configLine() {
       const addition = 5 / this.coefficient;
       return {
@@ -226,6 +283,62 @@ export default {
         ],
         strokeWidth: 1,
         stroke: "#27262C",
+      };
+    },
+    configStickSize() {
+      const width = 112 / this.coefficient;
+      const height = 6 / this.coefficient;
+      return {
+        image: this.stickSize,
+        width: width,
+        height: height,
+        x: this.mainLength / 3,
+        y: -20 / this.coefficient,
+      };
+    },
+    configStickLength() {
+      return {
+        text: `${this.stickInput.value}м`,
+        fontSize: 14 / this.coefficient,
+        // fontFamily: 'Roboto',
+        // fontStyle: 'bold',
+        fill: "#27262C",
+        x: this.mainLength / 2 + 8 / this.coefficient,
+        y: -45 / this.coefficient,
+        rotation: -1 * this.rotation,
+      };
+    },
+    configBase() {
+      return {
+        x: 0,
+        y: this.configKonva.height - 18,
+        width: this.configKonva.width,
+        height: 18,
+        fill: "#DEDEDE",
+      };
+    },
+    configLiftingHeight() {
+      const width = 8 / this.coefficient;
+      const height = 286 / this.coefficient;
+      return {
+        image: this.liftingHeight,
+        width: width,
+        height: height,
+        x: this.size.width - (!this.mobileVersion ? 34 : 39),
+        y: this.size.height - height,
+      };
+    },
+    configStickLengthText() {
+      const height = 286 / this.coefficient;
+      const length = this.parameter.find((item) => item.id === "liftingHeight");
+      return {
+        text: `${length.value}м`,
+        fontSize: 14 / this.coefficient,
+        // fontFamily: 'Roboto',
+        // fontStyle: 'bold',
+        fill: "#27262C",
+        x: this.size.width - (!this.mobileVersion ? 64 : 59),
+        y: this.size.height - height / 2,
       };
     },
   },
@@ -265,6 +378,38 @@ export default {
         this.stickLength = this.stickLength * 1.89 - 4;
       }
     },
+    updateParameter() {
+      let value = Number(this.stickInput.value);
+
+      if (value > 84) {
+        value = 84;
+        this.stickInput.value = 84;
+      }
+      this.stickInput.value = Number(this.stickInput.value).toFixed(0);
+      if (value <= 4) {
+        this.stickLength = 41 / this.coefficient;
+        this.rotation = -16.31;
+        this.headPosition = {
+          x: 308 / this.coefficient,
+          y: 270 / this.coefficient,
+        };
+      } else {
+        this.stickLength =
+          41 / this.coefficient + value * (!this.mobileVersion ? 2.052 : 1.21);
+        this.rotation = -16.31 - value * 0.1995;
+        this.headPosition = {
+          ...this.headPosition,
+          x:
+            (this.mainLength + this.stickLength + this.offset.x) *
+            Math.sin((90 + this.rotation) * (Math.PI / 180)),
+          y:
+            -1 *
+              (this.mainLength + this.stickLength) *
+              Math.cos((90 + this.rotation) * (Math.PI / 180)) +
+            this.offset.y,
+        };
+      }
+    },
   },
   watch: {
     size() {
@@ -274,6 +419,11 @@ export default {
     mobileVersion() {
       this.mobileVersion ? (this.coefficient = 1.89) : (this.coefficient = 1);
       this.updatePositions();
+    },
+    "stickInput.value"() {
+      if (!this.drag) {
+        this.updateParameter();
+      }
     },
   },
 };
