@@ -3,19 +3,21 @@
     <h4
       class="block-title"
       :style="{
-        padding: mobileWidth ? '12px 0 11px 0' : '12px 0 11px 12px',
+        padding: mobileVersion ? '12px 0 11px 0' : '12px 0 11px 12px',
       }"
     >
       Выберите необходимые параметры
     </h4>
     <div
       class="title-border"
-      :style="{ display: mobileWidth ? 'block' : 'none' }"
+      :style="{ display: mobileVersion ? 'block' : 'none' }"
     ></div>
-    <div class="input-container">
+    <div class="input-container" :style="{ height: height }">
       <div
         class="input-wrapper"
-        :style="{ padding: mobileWidth ? '0' : '0 12px' }"
+        :style="{
+          padding: mobileVersion ? '0' : '0 12px',
+        }"
       >
         <div v-for="row of parameter" :key="row.id">
           <div class="input-row">
@@ -32,23 +34,26 @@
 <script>
 export default {
   name: "ParameterInput",
+  data() {
+    return {
+      height: "auto",
+    };
+  },
   props: {
     parameter: {
       type: Array,
       required: true,
     },
-    clientWidth: {
-      type: Number,
+    mobileVersion: {
+      type: Boolean,
       required: true,
-    },
-    widthMobileVersion: {
-      type: Number,
-      required: true,
+      default: false,
     },
   },
-  computed: {
-    mobileWidth() {
-      return this.clientWidth < this.widthMobileVersion;
+  computed: {},
+  watch: {
+    mobileVersion() {
+      !this.mobileVersion ? (this.height = "397px") : (this.height = "auto");
     },
   },
 };

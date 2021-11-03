@@ -1,35 +1,43 @@
 <template>
-  <div
-    class="calc-container"
-    ref="calc"
-    :style="{
-      gridTemplateColumns: columnSizes,
-      padding: clientWidth < widthMobileVersion ? '0 22px' : 0,
-      background: clientWidth < widthMobileVersion ? '#f1f1f1' : 'none',
-    }"
-  >
-    <div class="calc-inputs">
-      <parameter-input :parameter="parameter">
-        <template v-if="clientWidth >= widthMobileVersion">
-          <div class="rent-container">
-            <rent-truck-crane />
-          </div>
-        </template>
-      </parameter-input>
-    </div>
+  <div class="calculator">
     <div
-      class="calc-mobile-crane"
+      class="calc-container"
+      ref="calc"
       :style="{
-        backgroundSize: clientWidth < widthMobileVersion ? '13px' : '16px',
+        gridTemplateColumns: columnSizes,
+        padding: moduleWidth < widthMobileVersion ? '0 22px' : 0,
+        background: moduleWidth < widthMobileVersion ? '#f1f1f1' : 'none',
       }"
     >
-      <visual-editor />
-    </div>
-    <template v-if="clientWidth < widthMobileVersion">
-      <div class="rent-container-bottom">
-        <rent-truck-crane />
+      <div class="calc-inputs">
+        <parameter-input
+          :parameter="parameter"
+          :mobileVersion="moduleWidth < widthMobileVersion"
+        >
+          <template v-if="moduleWidth >= widthMobileVersion">
+            <div class="rent-container">
+              <rent-truck-crane />
+            </div>
+          </template>
+        </parameter-input>
       </div>
-    </template>
+      <div
+        class="calc-mobile-crane"
+        :style="{
+          backgroundSize: moduleWidth < widthMobileVersion ? '13px' : '16px',
+        }"
+      >
+        <visual-editor
+          :size="{ width: size.width - 2, height: size.height - 2 }"
+          :mobileVersion="moduleWidth < widthMobileVersion"
+        />
+      </div>
+      <template v-if="moduleWidth < widthMobileVersion">
+        <div class="rent-container-bottom">
+          <rent-truck-crane />
+        </div>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -50,7 +58,8 @@ export default {
       backgroundSize: 16,
       widthMobileVersion: 828,
       columnSizes: null,
-      clientWidth: null,
+      moduleWidth: 0,
+      size: { width: 0, height: 0 },
       parameter: [
         { id: "cargoWeight", title: "Вес груза, т:", value: 0.1 },
         { id: "cargoHeight", title: "Высота груза, м:", value: 1 },
@@ -67,16 +76,20 @@ export default {
     changeWidthCraneSection() {
       const fullWidth = this.$refs.calc?.clientWidth;
       let widthInPercent;
+      let craneSectionHeight;
       if (fullWidth >= 1280) {
         // 4k display(disabled)
         widthInPercent = 63;
+        craneSectionHeight = 463;
         this.backgroundSize = 16;
       } else if (fullWidth >= this.widthMobileVersion && fullWidth < 1280) {
         widthInPercent = 61.9;
         this.backgroundSize = 16;
+        craneSectionHeight = 463;
       } else if (fullWidth < this.widthMobileVersion) {
         widthInPercent = 100;
         this.backgroundSize = 13;
+        craneSectionHeight = 246;
       }
       let numberOfSquares = Math.floor(
         (fullWidth * widthInPercent) / 100 / this.backgroundSize
@@ -88,7 +101,8 @@ export default {
       widthInPercent !== 100
         ? (this.columnSizes = `1fr ${craneColumnWidth}px`)
         : (this.columnSizes = `${craneColumnWidth}px`);
-      this.clientWidth = fullWidth;
+      this.size = { width: craneColumnWidth, height: craneSectionHeight };
+      this.moduleWidth = fullWidth;
     },
   },
 };
@@ -104,7 +118,7 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-#calculator {
+.calculator {
   max-width: 908px;
   // удалить margin в конечном билде
   margin: 40px auto;
