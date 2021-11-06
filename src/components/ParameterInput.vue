@@ -82,6 +82,9 @@ export default {
       if (id === "cargoHeight" && Number(num) > 99) {
         param.value = 99;
       }
+      if (id === "stickLength" && Number(num) > 84) {
+        param.value = 84;
+      }
     },
     defaultNumber(id, num) {
       let param = this.parameter.find((item) => item.id === id);

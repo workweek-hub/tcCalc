@@ -11,10 +11,12 @@
         <v-text :config="configStickLength"></v-text>
         <v-image :config="configStickSize"></v-image>
       </v-group>
-      <v-image :config="configHook"></v-image>
-      <v-image :config="configHead" ref="head"></v-image>
-      <v-text :config="configCargoWeight"></v-text>
-      <v-rect :config="configCargo" ref="cargo"></v-rect>
+      <v-group ref="cargoGroup" :config="configCargoGroup">
+        <v-image :config="configHook"></v-image>
+        <v-image :config="configHead" ref="head"></v-image>
+        <v-text :config="configCargoWeight"></v-text>
+        <v-rect :config="configCargo" ref="cargo"></v-rect>
+      </v-group>
       <v-image :config="configTruck"></v-image>
     </v-layer>
   </v-stage>
@@ -56,18 +58,17 @@ export default {
       hook: new Image(),
       liftingHeight: new Image(),
       stickSize: new Image(),
-      headPosition: { x: 308, y: 264 },
+      headPosition: { x: 0, y: 0 },
       mainLength: 239,
-      stickLength: 41,
-      rotation: -16.31,
-      created: false,
+      stickLength: 0,
+      rotation: -16.61,
       drag: false,
+      cargoGroupPosition: { x: 0, y: 0 },
     };
   },
   created() {
-    this.mobileVersion ? (this.coefficient = 1.89) : (this.coefficient = 1);
+    this.mobileResize();
     this.changeConfig();
-    this.changeMobile();
     this.truck.src = require("@/assets/images/crane.svg");
     this.arrow.src = require("@/assets/images/arrow.svg");
     this.head.src = require("@/assets/images/head.svg");
@@ -75,101 +76,17 @@ export default {
     this.stickSize.src = require("@/assets/images/size.svg");
     this.liftingHeight.src = require("@/assets/images/height.svg");
     this.$nextTick().then(() => {
-      this.headPosition = {
-        x: 308 / this.coefficient,
-        y: 270 / this.coefficient,
-      };
-      this.stickLength = !this.mobileVersion ? 41 : 45 / this.coefficient;
-      this.created = true;
+      this.sizeCalculation();
     });
   },
   mounted() {
     const head = this.$refs.head.getNode();
     const cargo = this.$refs.cargo.getNode();
     head.addEventListener("dragmove", () => {
-      this.drag = true;
-      let headX = head.x();
-      let headY = head.y();
-      const maxX = 420 / this.coefficient;
-      const minX = 308 / this.coefficient;
-      const minY = (!this.mobileVersion ? 113 : 102) / this.coefficient;
-      const maxY = this.offset.y - (!this.mobileVersion ? 84 : 47);
-      if (headX > maxX) {
-        headX = maxX;
-        head.x(maxX);
-      } else if (headX < minX) {
-        headX = minX;
-        head.x(minX);
-      }
-      if (headY <= minY) {
-        headY = minY;
-        head.y(minY - 6 / this.coefficient);
-      } else if (headY > maxY) {
-        headY = maxY;
-        head.y(maxY - 6 / this.coefficient);
-      }
-      const length = head.y() - this.offset.y;
-      const height = headX - this.offset.x;
-      const totalStickLength = Math.sqrt(
-        Math.pow(length, 2) + Math.pow(height, 2)
-      );
-      this.rotation = Math.atan(length / height) * 57.2958;
-      this.stickLength = totalStickLength - this.mainLength;
-      this.headPosition = { x: headX, y: headY };
-      let meterLength =
-        ((this.mobileVersion ? 8.55 : 4.95) * this.stickLength) /
-        (236 / this.coefficient);
-      this.stickInput.value = (
-        (this.stickLength / 11.875) *
-        meterLength
-      ).toFixed(0);
+      this.moveObject("head");
     });
     cargo.addEventListener("dragmove", () => {
-      this.drag = true;
-      const cargoWidth = 99 / this.coefficient;
-      const cargoHeight = 86 / this.coefficient;
-      const maxX =
-        420 / this.coefficient - cargoWidth / 2 + 9 / this.coefficient;
-      const minX =
-        308 / this.coefficient - cargoWidth / 2 + 9 / this.coefficient;
-      const minY =
-        (!this.mobileVersion ? 113 : 108) / this.coefficient +
-        (cargoHeight + 7 / this.coefficient);
-      const maxY =
-        this.offset.y -
-        (!this.mobileVersion ? 102 : 55) +
-        (cargoHeight + 31 / this.coefficient);
-      if (cargo.x() > maxX) {
-        cargo.x(maxX);
-      } else if (cargo.x() < minX) {
-        cargo.x(minX);
-      }
-      if (cargo.y() <= minY) {
-        cargo.y(minY - 6 / this.coefficient);
-      } else if (cargo.y() > maxY) {
-        cargo.y(maxY - 6 / this.coefficient);
-      }
-      let cargoX = cargo.x();
-      let cargoY = cargo.y();
-      const headX = cargoX + cargoWidth / 2 - 9 / this.coefficient;
-      const headY = cargoY - 86 / this.coefficient - 6;
-      head.x(headX);
-      head.y(headY);
-      const length = headY - this.offset.y;
-      const height = headX - this.offset.x;
-      const totalStickLength = Math.sqrt(
-        Math.pow(length, 2) + Math.pow(height, 2)
-      );
-      this.rotation = Math.atan(length / height) * 57.2958;
-      this.stickLength = totalStickLength - this.mainLength;
-      this.headPosition = { x: headX, y: headY };
-      let meterLength =
-        ((this.mobileVersion ? 8.55 : 4.95) * this.stickLength) /
-        (236 / this.coefficient);
-      this.stickInput.value = (
-        (this.stickLength / 11.875) *
-        meterLength
-      ).toFixed(0);
+      this.moveObject("cargo");
     });
     head.addEventListener("dragend", () => {
       this.drag = false;
@@ -179,6 +96,14 @@ export default {
     });
   },
   computed: {
+    configCargoGroup() {
+      return {
+        width: 100 / this.coefficient,
+        height: 172 / this.coefficient,
+        x: this.cargoGroupPosition.x / this.coefficient,
+        y: this.cargoGroupPosition.y / this.coefficient,
+      };
+    },
     configTruck() {
       const width = 250 / this.coefficient;
       const height = 99 / this.coefficient;
@@ -217,6 +142,7 @@ export default {
         fill: "#D0232F",
         stroke: "27262C",
         strokeWidth: 1,
+        cornerRadius: [0, 0, 16, 0],
       };
     },
     configHead() {
@@ -227,8 +153,8 @@ export default {
         width: width,
         height: height,
         rotation: 15,
-        x: this.headPosition.x,
-        y: this.headPosition.y,
+        x: 40 / this.coefficient,
+        y: 0,
         draggable: true,
         cursor: "pointer",
       };
@@ -240,44 +166,40 @@ export default {
         image: this.hook,
         width: width,
         height: height,
-        x: this.headPosition.x - 1,
-        y: this.headPosition.y + 6,
+        x: 39 / this.coefficient,
+        y: 12 / this.coefficient,
       };
     },
     configCargo() {
-      const width = 99 / this.coefficient;
-      const height = 80 / this.coefficient;
       return {
-        x: this.headPosition.x - width / 2 + 9 / this.coefficient,
-        y: this.headPosition.y + 86 / this.coefficient + 6,
-        width: width,
-        height: height,
+        x: 0,
+        y: 98 / this.coefficient,
+        width: 100 / this.coefficient,
+        height: 80 / this.coefficient,
         fill: "#DF11201A",
         stroke: "#DF1120",
         strokeWidth: 1,
         draggable: true,
+        cornerRadius: 2,
       };
     },
     configCargoWeight() {
       let text = this.parameter.find((item) => item.id === "cargoWeight").value;
-      const width = 99 / this.coefficient;
-      // const height = 80 / this.coefficient;
       return {
         text: `${text}т`,
         fontSize: 14 / this.coefficient,
-        // fontFamily: 'Roboto',
-        // fontStyle: 'bold',
+        fontStyle: "bold",
         fill: "#27262C",
-        x: this.headPosition.x - width / 4 + 20 / this.coefficient,
-        y: this.headPosition.y + 119 / this.coefficient + 6,
+        x: 35 / this.coefficient,
+        y: 130 / this.coefficient,
       };
     },
     configLine() {
-      const addition = 5 / this.coefficient;
+      const addition = 2 / this.coefficient;
       return {
         points: [
           this.offset.x - addition,
-          this.offset.y - addition,
+          this.offset.y + addition,
           this.headPosition.x + addition,
           this.headPosition.y + addition,
         ],
@@ -300,8 +222,7 @@ export default {
       return {
         text: `${this.stickInput.value}м`,
         fontSize: 14 / this.coefficient,
-        // fontFamily: 'Roboto',
-        // fontStyle: 'bold',
+        fontStyle: "bold",
         fill: "#27262C",
         x: this.mainLength / 2 + 8 / this.coefficient,
         y: -45 / this.coefficient,
@@ -334,8 +255,7 @@ export default {
       return {
         text: `${length.value}м`,
         fontSize: 14 / this.coefficient,
-        // fontFamily: 'Roboto',
-        // fontStyle: 'bold',
+        fontStyle: "bold",
         fill: "#27262C",
         x: this.size.width - (!this.mobileVersion ? 64 : 59),
         y: this.size.height - height / 2,
@@ -343,86 +263,126 @@ export default {
     },
   },
   methods: {
+    mobileResize() {
+      this.mobileVersion ? (this.coefficient = 1.89) : (this.coefficient = 1);
+      this.mobileVersion
+        ? (this.offset = { x: 17, y: this.size.height - 57 })
+        : (this.offset = { x: 36, y: this.size.height - 107 });
+      this.mainLength = 239 / this.coefficient;
+    },
+    moveObject(grab) {
+      this.drag = true;
+      this.changeCargoGroupPosition(grab);
+      this.updateInputValue();
+    },
+    edgeDistance(grab, side) {
+      if (grab === "head") {
+        return side === "x" ? 40 / this.coefficient : 0;
+      }
+      if (grab === "cargo") {
+        return side === "y" ? 98 / this.coefficient : 0;
+      }
+    },
+    changeCargoGroupPosition(grab) {
+      const grabRef = this.$refs[grab].getNode();
+      const cargoGroup = this.$refs.cargoGroup.getNode();
+
+      const maxX = 368 / this.coefficient;
+      const minX = 268 / this.coefficient;
+      const minY = 110 / this.coefficient;
+      const maxY = 268 / this.coefficient;
+
+      let posX = cargoGroup.x() + grabRef.x() - this.edgeDistance(grab, "x");
+      let posY = cargoGroup.y() + grabRef.y() - this.edgeDistance(grab, "y");
+
+      if (posX > maxX) posX = maxX;
+      if (posX < minX) posX = minX;
+      if (posY > maxY) posY = maxY;
+      if (posY < minY) posY = minY;
+
+      cargoGroup.x(posX);
+      cargoGroup.y(posY);
+
+      grabRef.x(this.edgeDistance(grab, "x"));
+      grabRef.y(this.edgeDistance(grab, "y"));
+
+      this.headPosition = {
+        x: cargoGroup.x() + this.edgeDistance("head", "x"),
+        y: cargoGroup.y() + 2.3 / this.coefficient,
+      };
+
+      this.changeBasePosition(cargoGroup.x(), cargoGroup.y());
+    },
+    changeBasePosition(cargoGroupX, cargoGroupY) {
+      const length = cargoGroupY - this.offset.y;
+      const height =
+        cargoGroupX - this.offset.x + this.edgeDistance("head", "x");
+      const totalBaseLength = Math.sqrt(
+        Math.pow(length, 2) + Math.pow(height, 2)
+      );
+      this.rotation = Math.atan(length / height) * 57.2958 + 1.3;
+      this.stickLength = totalBaseLength - this.mainLength;
+    },
+    updateInputValue() {
+      const defaultStickLength = this.mobileVersion ? 26.95 : 46.88;
+      const maxStickLength = this.mobileVersion ? 112 : 207;
+      let meterLength = (maxStickLength - defaultStickLength) / 80;
+      this.stickInput.value = (
+        (this.stickLength - defaultStickLength) / meterLength +
+        4
+      ).toFixed(0);
+    },
     changeConfig() {
       this.configKonva = this.size;
     },
-    changeMobile() {
-      if (this.mobileVersion) {
-        this.offset = { x: 17, y: this.size.height - 57 };
-        this.mainLength = 239 / this.coefficient;
-      } else {
-        this.offset = { x: 36, y: this.size.height - 107 };
-        this.mainLength = 239;
-      }
-    },
-    updatePositions() {
-      if (this.mobileVersion && this.created) {
-        this.offset = {
-          x: this.offset.x / 1.89,
-          y: this.offset.y / 1.89,
-        };
-        this.headPosition = {
-          x: this.headPosition.x / 1.89,
-          y: this.headPosition.y / 1.89,
-        };
-        this.stickLength = this.stickLength / 1.89 + 4;
-      } else if (!this.mobileVersion && this.created) {
-        this.offset = {
-          x: this.offset.x * 1.89,
-          y: this.offset.y * 1.89,
-        };
-        this.headPosition = {
-          x: this.headPosition.x * 1.89,
-          y: this.headPosition.y * 1.89,
-        };
-        this.stickLength = this.stickLength * 1.89 - 4;
-      }
-    },
-    updateParameter() {
+    sizeCalculation() {
+      const cargoGroup = this.$refs.cargoGroup.getNode();
       let value = Number(this.stickInput.value);
+      const defaultStickLength = this.mobileVersion ? 26.95 : 46.88;
+      const maxStickLength = this.mobileVersion ? 112 : 207;
+      let meterLength = (maxStickLength - defaultStickLength) / 80;
+      const defaultRotation = -16.61;
+      const maxAngel = -32.03;
+      const anglePerMeter = ((maxAngel - defaultRotation) / value).toFixed(2);
 
-      if (value > 84) {
-        value = 84;
-        this.stickInput.value = 84;
-      }
-      this.stickInput.value = Number(this.stickInput.value).toFixed(0);
-      if (value <= 4) {
-        this.stickLength = 41 / this.coefficient;
-        this.rotation = -16.31;
-        this.headPosition = {
-          x: 308 / this.coefficient,
-          y: 270 / this.coefficient,
-        };
-      } else {
-        this.stickLength =
-          41 / this.coefficient + value * (!this.mobileVersion ? 2.052 : 1.21);
-        this.rotation = -16.31 - value * 0.1995;
-        this.headPosition = {
-          ...this.headPosition,
-          x:
-            (this.mainLength + this.stickLength + this.offset.x) *
-            Math.sin((90 + this.rotation) * (Math.PI / 180)),
-          y:
-            -1 *
-              (this.mainLength + this.stickLength) *
-              Math.cos((90 + this.rotation) * (Math.PI / 180)) +
-            this.offset.y,
-        };
-      }
+      const length = (value - 4) * meterLength + defaultStickLength;
+      this.stickLength =
+        length >= defaultStickLength ? length : defaultStickLength;
+
+      const angle = (value - 4) * anglePerMeter + defaultRotation;
+      this.rotation = angle < defaultRotation ? angle - 1.3 : defaultRotation;
+
+      const position = {
+        x:
+          (this.mainLength + this.stickLength + this.offset.x) *
+          Math.sin((90 + this.rotation) * (Math.PI / 180)),
+        y:
+          -1 *
+            (this.mainLength + this.stickLength) *
+            Math.cos((90 + this.rotation) * (Math.PI / 180)) +
+          this.offset.y,
+      };
+
+      cargoGroup.x(position.x - this.edgeDistance("head", "x"));
+      cargoGroup.y(position.y - 6.3 / this.coefficient);
+
+      this.headPosition = {
+        x: position.x,
+        y: position.y - 4 / this.coefficient,
+      };
     },
   },
   watch: {
     size() {
       this.changeConfig();
-      this.changeMobile();
     },
     mobileVersion() {
-      this.mobileVersion ? (this.coefficient = 1.89) : (this.coefficient = 1);
-      this.updatePositions();
+      this.mobileResize();
+      this.sizeCalculation();
     },
     "stickInput.value"() {
       if (!this.drag) {
-        this.updateParameter();
+        this.sizeCalculation();
       }
     },
   },
