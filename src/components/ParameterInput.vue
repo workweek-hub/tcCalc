@@ -28,6 +28,7 @@
               @keypress="isNumber($event)"
               @blur="defaultNumber(row.id, row.value)"
               @input="inputValidation(row.id, row.value)"
+              :min="row.id === 'cargoWeight' ? 0.1 : 1"
             />
           </div>
         </div>
@@ -73,19 +74,28 @@ export default {
     },
     inputValidation(id, num) {
       let param = this.parameter.find((item) => item.id === id);
-      if (id === "liftingHeight" && Number(num) > 99) {
-        param.value = 99;
+      if (id === "liftingHeight") {
+        Number(num) > 99
+          ? (param.value = 99)
+          : (param.value = Number(num).toFixed(0));
       }
-      if (id === "cargoWeight" && Number(num) > 500) {
-        param.value = 500;
+      if (id === "cargoHeight") {
+        Number(num) > 99
+          ? (param.value = 99)
+          : (param.value = Number(num).toFixed(0));
       }
-      if (id === "cargoHeight" && Number(num) > 99) {
-        param.value = 99;
+      if (id === "stickLength") {
+        Number(num) > 84
+          ? (param.value = 84)
+          : (param.value = Number(num).toFixed(0));
       }
-      if (id === "stickLength" && Number(num) > 84) {
-        param.value = 84;
+      if (id === "cargoWeight") {
+        Number(num) > 500
+          ? (param.value = 500)
+          : (param.value = num.replace(/(\.\d)\d+/g, "$1"));
       }
     },
+
     defaultNumber(id, num) {
       let param = this.parameter.find((item) => item.id === id);
       if (id === "stickLength" && Number(num) < 4) {

@@ -354,7 +354,6 @@ export default {
         (maxAngel - defaultRotation) /
         stickLength
       ).toFixed(2);
-
       const length = (stickLength - 4) * meterLength + defaultStickLength;
       this.stickLength =
         length >= defaultStickLength ? length : defaultStickLength;
@@ -372,6 +371,9 @@ export default {
             Math.cos((90 + this.rotation) * (Math.PI / 180)) +
           this.offset.y,
       };
+
+      this.liftingHeightInput.value =
+        stickLength < 4 ? 1 : Math.round(stickLength * 1.225) - 4;
 
       cargoGroup.x(position.x - this.edgeDistance("head", "x"));
       cargoGroup.y(position.y - 6.3 / this.coefficient);
@@ -394,11 +396,11 @@ export default {
         this.sizeCalculation();
       }
     },
-    "liftingHeightInput.value"() {
-      if (!this.drag) {
-        this.sizeCalculation("liftingHeight");
-      }
-    },
+    // "liftingHeightInput.value"() {
+    //   if (!this.drag) {
+    //     this.sizeCalculation("liftingHeight");
+    //   }
+    // },
   },
 };
 </script>
