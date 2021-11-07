@@ -13,6 +13,7 @@
         <parameter-input
           :parameter="parameter"
           :mobileVersion="moduleWidth < widthMobileVersion"
+          @textInput="textInput"
         >
           <template v-if="moduleWidth >= widthMobileVersion">
             <div class="rent-container">
@@ -33,6 +34,8 @@
           :stickLengthInput="getParam('stickLength')"
           :cargoWeightInput="getParam('cargoWeight')"
           :liftingHeightInput="getParam('liftingHeight')"
+          :input="input"
+          @textInput="textInput"
         />
       </div>
       <template v-if="moduleWidth < widthMobileVersion">
@@ -79,6 +82,7 @@ export default {
       moduleWidth: 0,
       size: { width: 0, height: 0 },
       cardCol: "",
+      input: false,
       parameter: [
         { id: "cargoWeight", title: "Вес груза, т:", value: 0.1 },
         { id: "cargoHeight", title: "Высота груза, м:", value: 1 },
@@ -113,6 +117,9 @@ export default {
     },
   },
   methods: {
+    textInput(value) {
+      this.input = value;
+    },
     getParam(id) {
       return this.parameter.find((item) => item.id === id);
     },

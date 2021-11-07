@@ -29,6 +29,7 @@
               @blur="defaultNumber(row.id, row.value)"
               @input="inputValidation(row.id, row.value)"
               :min="row.id === 'cargoWeight' ? 0.1 : 1"
+              :step="row.id === 'cargoWeight' ? 0.1 : 1"
             />
           </div>
         </div>
@@ -57,6 +58,9 @@ export default {
       default: false,
     },
   },
+  emits: {
+    textInput: String,
+  },
   computed: {},
   methods: {
     isNumber: function (evt) {
@@ -73,6 +77,7 @@ export default {
       }
     },
     inputValidation(id, num) {
+      this.$emit("textInput", id);
       let param = this.parameter.find((item) => item.id === id);
       if (id === "liftingHeight") {
         Number(num) > 99

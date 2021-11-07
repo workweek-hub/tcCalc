@@ -47,6 +47,12 @@ export default {
       type: Object,
       required: true,
     },
+    input: {
+      required: true,
+    },
+  },
+  emits: {
+    textInput: Boolean,
   },
   data() {
     return {
@@ -67,6 +73,7 @@ export default {
       stickLength: 0,
       rotation: -16.61,
       drag: false,
+      liftingInput: false,
       cargoGroupPosition: { x: 0, y: 0 },
     };
   },
@@ -371,10 +378,12 @@ export default {
             Math.cos((90 + this.rotation) * (Math.PI / 180)) +
           this.offset.y,
       };
-
-      this.liftingHeightInput.value =
-        stickLength < 4 ? 1 : Math.round(stickLength * 1.225) - 4;
-
+      if (this.input !== "liftingHeight") {
+        this.liftingHeightInput.value =
+          stickLength < 4 ? 1 : Math.round(stickLength * 1.225) - 4;
+      } else {
+        this.$emit("textInput", false);
+      }
       cargoGroup.x(position.x - this.edgeDistance("head", "x"));
       cargoGroup.y(position.y - 6.3 / this.coefficient);
       this.headPosition = {
@@ -396,11 +405,12 @@ export default {
         this.sizeCalculation();
       }
     },
-    // "liftingHeightInput.value"() {
-    //   if (!this.drag) {
-    //     this.sizeCalculation("liftingHeight");
-    //   }
-    // },
+    "liftingHeightInput.value"() {
+      if (!this.drag && this.input === "liftingHeight") {
+        this.stickLengthInput.value =
+          Math.round(Number(this.liftingHeightInput.value) / 1.225) + 3;
+      }
+    },
   },
 };
 </script>
