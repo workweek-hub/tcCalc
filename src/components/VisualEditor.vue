@@ -35,7 +35,7 @@ export default {
       required: true,
       default: false,
     },
-    parameter: {
+    cargoWeightInput: {
       type: Object,
       required: true,
     },
@@ -80,6 +80,7 @@ export default {
     this.stickSize.src = require("@/assets/images/size.svg");
     this.liftingHeight.src = require("@/assets/images/height.svg");
     this.$nextTick().then(() => {
+      this.mobileResize();
       this.sizeCalculation();
     });
   },
@@ -188,7 +189,7 @@ export default {
       };
     },
     configCargoWeight() {
-      let text = this.parameter.cargoWeight;
+      let text = this.cargoWeightInput.value;
       return {
         text: `${text}т`,
         fontSize: 14 / this.coefficient,
@@ -314,9 +315,9 @@ export default {
         x: cargoGroup.x() + this.edgeDistance("head", "x"),
         y: cargoGroup.y() + 2.3 / this.coefficient,
       };
-      const meterHeight = 0.62;
+      const meterHeight = this.mobileVersion ? 1.17 : 0.62;
       this.liftingHeightInput.value =
-        Math.round(meterHeight * (268 - cargoGroup.y())) + 1;
+        Math.round(meterHeight * (268 / this.coefficient - cargoGroup.y())) + 1;
       this.changeBasePosition(cargoGroup.x(), cargoGroup.y());
     },
     changeBasePosition(cargoGroupX, cargoGroupY) {
@@ -374,7 +375,6 @@ export default {
 
       cargoGroup.x(position.x - this.edgeDistance("head", "x"));
       cargoGroup.y(position.y - 6.3 / this.coefficient);
-      console.log(cargoGroup.y());
       this.headPosition = {
         x: position.x,
         y: position.y - 4 / this.coefficient,

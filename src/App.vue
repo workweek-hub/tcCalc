@@ -30,8 +30,8 @@
         <visual-editor
           :size="{ width: size.width - 2, height: size.height - 2 }"
           :mobileVersion="moduleWidth < widthMobileVersion"
-          :parameter="getParamValue"
           :stickLengthInput="getParam('stickLength')"
+          :cargoWeightInput="getParam('cargoWeight')"
           :liftingHeightInput="getParam('liftingHeight')"
         />
       </div>
@@ -110,13 +110,6 @@ export default {
         }
       }
       return newList;
-    },
-    getParamValue() {
-      let obj = {};
-      for (let item of this.parameter) {
-        obj[item.id] = item.value;
-      }
-      return obj;
     },
   },
   methods: {
