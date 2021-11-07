@@ -30,8 +30,9 @@
         <visual-editor
           :size="{ width: size.width - 2, height: size.height - 2 }"
           :mobileVersion="moduleWidth < widthMobileVersion"
-          :parameter="parameter"
-          :stickInput="parameter[3]"
+          :parameter="getParamValue"
+          :stickLengthInput="getParam('stickLength')"
+          :liftingHeightInput="getParam('liftingHeight')"
         />
       </div>
       <template v-if="moduleWidth < widthMobileVersion">
@@ -110,8 +111,18 @@ export default {
       }
       return newList;
     },
+    getParamValue() {
+      let obj = {};
+      for (let item of this.parameter) {
+        obj[item.id] = item.value;
+      }
+      return obj;
+    },
   },
   methods: {
+    getParam(id) {
+      return this.parameter.find((item) => item.id === id);
+    },
     changeWidthCraneSection() {
       const fullWidth = this.$refs.calc?.clientWidth;
       let widthInPercent;

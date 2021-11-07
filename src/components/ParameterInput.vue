@@ -23,7 +23,7 @@
           <div class="input-row">
             <span>{{ row.title }}</span>
             <input
-              type="text"
+              type="number"
               v-model="row.value"
               @keypress="isNumber($event)"
               @blur="defaultNumber(row.id, row.value)"

@@ -36,10 +36,14 @@ export default {
       default: false,
     },
     parameter: {
-      type: Array,
+      type: Object,
       required: true,
     },
-    stickInput: {
+    stickLengthInput: {
+      type: Object,
+      required: true,
+    },
+    liftingHeightInput: {
       type: Object,
       required: true,
     },
@@ -184,7 +188,7 @@ export default {
       };
     },
     configCargoWeight() {
-      let text = this.parameter.find((item) => item.id === "cargoWeight").value;
+      let text = this.parameter.cargoWeight;
       return {
         text: `${text}т`,
         fontSize: 14 / this.coefficient,
@@ -220,7 +224,7 @@ export default {
     },
     configStickLength() {
       return {
-        text: `${this.stickInput.value}м`,
+        text: `${this.stickLengthInput.value}м`,
         fontSize: 14 / this.coefficient,
         fontStyle: "bold",
         fill: "#27262C",
@@ -251,9 +255,9 @@ export default {
     },
     configStickLengthText() {
       const height = 286 / this.coefficient;
-      const length = this.parameter.find((item) => item.id === "liftingHeight");
+      const length = this.liftingHeightInput.value;
       return {
-        text: `${length.value}м`,
+        text: `${length}м`,
         fontSize: 14 / this.coefficient,
         fontStyle: "bold",
         fill: "#27262C",
@@ -310,7 +314,9 @@ export default {
         x: cargoGroup.x() + this.edgeDistance("head", "x"),
         y: cargoGroup.y() + 2.3 / this.coefficient,
       };
-
+      const meterHeight = 0.62;
+      this.liftingHeightInput.value =
+        Math.round(meterHeight * (268 - cargoGroup.y())) + 1;
       this.changeBasePosition(cargoGroup.x(), cargoGroup.y());
     },
     changeBasePosition(cargoGroupX, cargoGroupY) {
@@ -327,7 +333,7 @@ export default {
       const defaultStickLength = this.mobileVersion ? 26.95 : 46.88;
       const maxStickLength = this.mobileVersion ? 112 : 207;
       let meterLength = (maxStickLength - defaultStickLength) / 80;
-      this.stickInput.value = (
+      this.stickLengthInput.value = (
         (this.stickLength - defaultStickLength) / meterLength +
         4
       ).toFixed(0);
@@ -337,19 +343,22 @@ export default {
     },
     sizeCalculation() {
       const cargoGroup = this.$refs.cargoGroup.getNode();
-      let value = Number(this.stickInput.value);
+      let stickLength = Number(this.stickLengthInput.value);
       const defaultStickLength = this.mobileVersion ? 26.95 : 46.88;
       const maxStickLength = this.mobileVersion ? 112 : 207;
       let meterLength = (maxStickLength - defaultStickLength) / 80;
       const defaultRotation = -16.61;
       const maxAngel = -32.03;
-      const anglePerMeter = ((maxAngel - defaultRotation) / value).toFixed(2);
+      const anglePerMeter = (
+        (maxAngel - defaultRotation) /
+        stickLength
+      ).toFixed(2);
 
-      const length = (value - 4) * meterLength + defaultStickLength;
+      const length = (stickLength - 4) * meterLength + defaultStickLength;
       this.stickLength =
         length >= defaultStickLength ? length : defaultStickLength;
 
-      const angle = (value - 4) * anglePerMeter + defaultRotation;
+      const angle = (stickLength - 4) * anglePerMeter + defaultRotation;
       this.rotation = angle < defaultRotation ? angle - 1.3 : defaultRotation;
 
       const position = {
@@ -365,7 +374,7 @@ export default {
 
       cargoGroup.x(position.x - this.edgeDistance("head", "x"));
       cargoGroup.y(position.y - 6.3 / this.coefficient);
-
+      console.log(cargoGroup.y());
       this.headPosition = {
         x: position.x,
         y: position.y - 4 / this.coefficient,
@@ -380,9 +389,14 @@ export default {
       this.mobileResize();
       this.sizeCalculation();
     },
-    "stickInput.value"() {
+    "stickLengthInput.value"() {
       if (!this.drag) {
         this.sizeCalculation();
+      }
+    },
+    "liftingHeightInput.value"() {
+      if (!this.drag) {
+        this.sizeCalculation("liftingHeight");
       }
     },
   },
