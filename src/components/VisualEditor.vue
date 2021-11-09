@@ -106,6 +106,18 @@ export default {
     cargo.addEventListener("dragend", () => {
       this.drag = false;
     });
+    cargo.on('mouseenter', function () {
+      document.body.style.cursor = "pointer";
+    });
+    cargo.on('mouseleave', function () {
+      document.body.style.cursor = "default";
+    });
+    head.on('mouseenter', function () {
+      document.body.style.cursor = "pointer";
+    });
+    head.on('mouseleave', function () {
+      document.body.style.cursor = "default";
+    });
   },
   computed: {
     configCargoGroup() {
@@ -252,17 +264,16 @@ export default {
     },
     configLiftingHeight() {
       const width = 8 / this.coefficient;
-      const height = 286 / this.coefficient;
+      const height = (this.size.height - 20 / this.coefficient);
       return {
         image: this.liftingHeight,
         width: width,
         height: height,
         x: this.size.width - (!this.mobileVersion ? 34 : 39),
-        y: this.size.height - height,
+        y: 20 / this.coefficient,
       };
     },
     configStickLengthText() {
-      const height = 286 / this.coefficient;
       const length = this.liftingHeightInput.value;
       return {
         text: `${length}м`,
@@ -270,7 +281,7 @@ export default {
         fontStyle: "bold",
         fill: "#27262C",
         x: this.size.width - (!this.mobileVersion ? 64 : 59),
-        y: this.size.height - height / 2,
+        y: (this.size.height - 20) / 2,
       };
     },
   },
@@ -299,9 +310,9 @@ export default {
       const grabRef = this.$refs[grab].getNode();
       const cargoGroup = this.$refs.cargoGroup.getNode();
 
-      const maxX = 368 / this.coefficient;
+      const maxX = this.mobileVersion ? 207 : 395;
       const minX = 268 / this.coefficient;
-      const minY = 110 / this.coefficient;
+      const minY = 20 / this.coefficient;
       const maxY = 268 / this.coefficient;
 
       let posX = cargoGroup.x() + grabRef.x() - this.edgeDistance(grab, "x");
@@ -314,15 +325,13 @@ export default {
 
       cargoGroup.x(posX);
       cargoGroup.y(posY);
-
       grabRef.x(this.edgeDistance(grab, "x"));
       grabRef.y(this.edgeDistance(grab, "y"));
-
       this.headPosition = {
         x: cargoGroup.x() + this.edgeDistance("head", "x"),
         y: cargoGroup.y() + 2.3 / this.coefficient,
       };
-      const meterHeight = this.mobileVersion ? 1.17 : 0.62;
+      const meterHeight = this.mobileVersion ? 0.745 : 0.395;
       this.liftingHeightInput.value =
         Math.round(meterHeight * (268 / this.coefficient - cargoGroup.y())) + 1;
       this.changeBasePosition(cargoGroup.x(), cargoGroup.y());
@@ -339,7 +348,7 @@ export default {
     },
     updateInputValue() {
       const defaultStickLength = this.mobileVersion ? 26.95 : 46.88;
-      const maxStickLength = this.mobileVersion ? 112 : 207;
+      const maxStickLength = this.mobileVersion ? 150 : 282;
       let meterLength = (maxStickLength - defaultStickLength) / 80;
       this.stickLengthInput.value = (
         (this.stickLength - defaultStickLength) / meterLength +
@@ -353,10 +362,10 @@ export default {
       const cargoGroup = this.$refs.cargoGroup.getNode();
       let stickLength = Number(this.stickLengthInput.value);
       const defaultStickLength = this.mobileVersion ? 26.95 : 46.88;
-      const maxStickLength = this.mobileVersion ? 112 : 207;
+      const maxStickLength = this.mobileVersion ? 150 : 282;
       let meterLength = (maxStickLength - defaultStickLength) / 80;
       const defaultRotation = -16.61;
-      const maxAngel = -32.03;
+      const maxAngel = -38.82;
       const anglePerMeter = (
         (maxAngel - defaultRotation) /
         stickLength

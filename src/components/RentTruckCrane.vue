@@ -27,12 +27,14 @@ button {
   color: white;
   font-size: 14px;
   line-height: 40px;
+  cursor: pointer;
 }
 p {
   font-size: 14px;
   line-height: 24px;
   > span {
     color: #df1120;
+    cursor: pointer;
   }
 }
 </style>

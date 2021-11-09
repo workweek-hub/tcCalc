@@ -77,7 +77,7 @@ export default {
   data() {
     return {
       backgroundSize: 16,
-      widthMobileVersion: 828,
+      widthMobileVersion: 878,
       columnSizes: null,
       moduleWidth: 0,
       size: { width: 0, height: 0 },

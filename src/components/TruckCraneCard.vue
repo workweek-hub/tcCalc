@@ -85,6 +85,7 @@ export default {
     margin: 10px auto;
     text-align: center;
     text-decoration: none;
+    cursor: pointer;
   }
 }
 </style>
