@@ -1,6 +1,8 @@
 <template>
   <div>
-    <button id="rentCrane">Арендовать автокран</button>
+    <button id="rentCrane" @click="$emit('filterOut', 'click')">
+      Подобрать автокран
+    </button>
     <p>
       Или позвоните нам по телефону <span>+78129931733</span> и мы поможем вам
     </p>
@@ -10,6 +12,9 @@
 <script>
 export default {
   name: "RentTruckCrane",
+  emits: {
+    filterOut: String,
+  },
 };
 </script>
 

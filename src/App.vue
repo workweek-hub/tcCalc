@@ -17,7 +17,7 @@
         >
           <template v-if="moduleWidth >= widthMobileVersion">
             <div class="rent-container">
-              <rent-truck-crane />
+              <rent-truck-crane @filterOut="filterList" />
             </div>
           </template>
         </parameter-input>
@@ -40,7 +40,7 @@
       </div>
       <template v-if="moduleWidth < widthMobileVersion">
         <div class="rent-container-bottom">
-          <rent-truck-crane />
+          <rent-truck-crane @filterOut="filterList" />
         </div>
       </template>
       <div
@@ -90,14 +90,15 @@ export default {
         { id: "stickLength", title: "Вылет стрелы, м:", value: 4 },
       ],
       truckCranes: trucks,
+      filteredList: [],
     };
   },
   mounted() {
     this.changeWidthCraneSection();
     window.addEventListener("resize", this.changeWidthCraneSection);
   },
-  computed: {
-    filteredList() {
+  methods: {
+    filterList() {
       let newList = [];
       const cargoWeight = this.parameter.find(
         (item) => item.id === "cargoWeight"
@@ -113,10 +114,8 @@ export default {
           newList.push(truck);
         }
       }
-      return newList;
+      this.filteredList = newList;
     },
-  },
-  methods: {
     textInput(value) {
       this.input = value;
     },

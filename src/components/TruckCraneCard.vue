@@ -1,5 +1,11 @@
 <template>
   <div class="card-container">
+    <template v-if="modal">
+      <rent-form
+        :weight="truck.weightLimit"
+        @closeModal="modal = false"
+      ></rent-form>
+    </template>
     <div
       class="truck-image"
       :style="{
@@ -8,21 +14,32 @@
         backgroundSize: 'cover',
       }"
     ></div>
-    <h5>{{ truck.name }}</h5>
+    <h5>
+      <a :href="truck.url">{{ truck.name }}</a>
+    </h5>
     <p><span>Основная стрела:</span> {{ truck.stickLength }}м</p>
     <p><span>Грузоподъемность:</span> {{ truck.weightLimit }}т</p>
-    <a :href="truck.url">Арендовать</a>
+    <button @click="modal = !modal">Арендовать</button>
   </div>
 </template>
 
 <script>
+import RentForm from "@/components/RentForm";
 export default {
   name: "TruckCraneCard",
+  components: {
+    RentForm,
+  },
   props: {
     truck: {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      modal: false,
+    };
   },
 };
 </script>
@@ -42,6 +59,13 @@ export default {
     font-size: 15px;
     margin: 10px 5px 10px 20px;
     height: 20px;
+    > a {
+      text-decoration: none;
+      color: #27262c;
+      &:hover {
+        color: #df1120;
+      }
+    }
   }
   > p {
     font-size: 14px;
@@ -50,7 +74,7 @@ export default {
       color: #6b6b6b;
     }
   }
-  > a {
+  > button {
     width: 90%;
     background: #df1120;
     border-radius: 20px;
