@@ -1,16 +1,22 @@
 <template>
   <v-stage :config="configKonva">
     <v-layer>
-      <v-text :config="configStickLengthText"></v-text>
-      <v-image :config="configLiftingHeight"></v-image>
-      <v-rect :config="configBase" v-if="!mobileVersion"></v-rect>
+      <v-line :config="configLiftLine"></v-line>
+      <v-image :config="configLiftArrow"></v-image>
+      <v-text :config="configLiftText"></v-text>
+
+      <v-rect :config="configBase"></v-rect>
       <v-line :config="configLine"></v-line>
       <v-group :config="configGroup">
         <v-rect :config="configRect"></v-rect>
         <v-image :config="configArrow"></v-image>
-        <v-text :config="configStickLength"></v-text>
-        <v-image :config="configStickSize"></v-image>
       </v-group>
+
+      <v-text :config="configStickLength"></v-text>
+      <v-image :config="configLeftArrow"></v-image>
+      <v-image :config="configRightArrow"></v-image>
+      <v-line :config="configLoadDistance"></v-line>
+
       <v-group ref="cargoGroup" :config="configCargoGroup">
         <v-image :config="configHook"></v-image>
         <v-image :config="configHead" ref="head"></v-image>
@@ -47,9 +53,6 @@ export default {
       type: Object,
       required: true,
     },
-    input: {
-      required: true,
-    },
   },
   emits: {
     textInput: Boolean,
@@ -66,6 +69,7 @@ export default {
       arrow: new Image(),
       head: new Image(),
       hook: new Image(),
+      arrowLen: new Image(),
       liftingHeight: new Image(),
       stickSize: new Image(),
       headPosition: { x: 0, y: 0 },
@@ -75,6 +79,7 @@ export default {
       drag: false,
       liftingInput: false,
       cargoGroupPosition: { x: 0, y: 0 },
+      loadDistanceWidth: 0,
     };
   },
   created() {
@@ -86,6 +91,7 @@ export default {
     this.hook.src = require("@/assets/images/hook.svg");
     this.stickSize.src = require("@/assets/images/size.svg");
     this.liftingHeight.src = require("@/assets/images/height.svg");
+    this.arrowLen.src = require("@/assets/images/arrow_len.svg");
     this.$nextTick().then(() => {
       this.mobileResize();
       this.sizeCalculation();
@@ -106,20 +112,93 @@ export default {
     cargo.addEventListener("dragend", () => {
       this.drag = false;
     });
-    cargo.on('mouseenter', function () {
+    cargo.on("mouseenter", function () {
       document.body.style.cursor = "pointer";
     });
-    cargo.on('mouseleave', function () {
+    cargo.on("mouseleave", function () {
       document.body.style.cursor = "default";
     });
-    head.on('mouseenter', function () {
+    head.on("mouseenter", function () {
       document.body.style.cursor = "pointer";
     });
-    head.on('mouseleave', function () {
+    head.on("mouseleave", function () {
       document.body.style.cursor = "default";
     });
   },
   computed: {
+    configLiftLine() {
+      return {
+        points: [
+          this.headPosition.x + 10 / this.coefficient,
+          this.size.height,
+          this.headPosition.x + 10 / this.coefficient,
+          this.headPosition.y + (this.mobileVersion ? 95 : 179),
+        ],
+        strokeWidth: 1,
+        stroke: "#27262C",
+      };
+    },
+    configLiftArrow() {
+      const width = 9 / this.coefficient;
+      const height = 9 / this.coefficient;
+      return {
+        image: this.arrowLen,
+        width: width,
+        height: height,
+        x: this.headPosition.x + 5.5 / this.coefficient,
+        y: this.headPosition.y + (this.mobileVersion ? 99 : 187),
+        rotation: -90,
+      };
+    },
+    configLiftText() {
+      const length = this.liftingHeightInput.value;
+      return {
+        text: `${length}м`,
+        fontSize: 14 / this.coefficient,
+        fontStyle: "bold",
+        fill: "#27262C",
+        x: this.headPosition.x + 20 / this.coefficient,
+        y:
+          (this.size.height - (this.headPosition.y + 177 / this.coefficient)) /
+            2 +
+          (this.headPosition.y + 163 / this.coefficient),
+      };
+    },
+    configLeftArrow() {
+      const width = 9 / this.coefficient;
+      const height = 9 / this.coefficient;
+      return {
+        image: this.arrowLen,
+        width: width,
+        height: height,
+        x: this.offset.x + (this.mobileVersion ? 3 : 5),
+        y: this.headPosition.y - (this.mobileVersion ? 3.3 : 1),
+        rotation: 180,
+      };
+    },
+    configRightArrow() {
+      const width = 9 / this.coefficient;
+      const height = 9 / this.coefficient;
+      return {
+        image: this.arrowLen,
+        width: width,
+        height: height,
+        x: this.headPosition.x,
+        y: this.headPosition.y - (this.mobileVersion ? 8.3 : 11),
+      };
+    },
+    configLoadDistance() {
+      return {
+        points: [
+          this.offset.x,
+          this.headPosition.y - 6,
+          this.headPosition.x,
+          this.headPosition.y - 6,
+        ],
+        strokeWidth: 1,
+        stroke: "#27262C",
+      };
+    },
     configCargoGroup() {
       return {
         width: 100 / this.coefficient,
@@ -242,46 +321,26 @@ export default {
         y: -20 / this.coefficient,
       };
     },
+    configBase() {
+      return {
+        x: 0,
+        y: this.configKonva.height - 18 / this.coefficient,
+        width: this.configKonva.width,
+        height: 18,
+        fill: "#DEDEDE",
+      };
+    },
     configStickLength() {
       return {
         text: `${this.stickLengthInput.value}м`,
         fontSize: 14 / this.coefficient,
         fontStyle: "bold",
         fill: "#27262C",
-        x: this.mainLength / 2 + 8 / this.coefficient,
-        y: -45 / this.coefficient,
-        rotation: -1 * this.rotation,
-      };
-    },
-    configBase() {
-      return {
-        x: 0,
-        y: this.configKonva.height - 18,
-        width: this.configKonva.width,
-        height: 18,
-        fill: "#DEDEDE",
-      };
-    },
-    configLiftingHeight() {
-      const width = 8 / this.coefficient;
-      const height = (this.size.height - 20 / this.coefficient);
-      return {
-        image: this.liftingHeight,
-        width: width,
-        height: height,
-        x: this.size.width - (!this.mobileVersion ? 34 : 39),
-        y: 20 / this.coefficient,
-      };
-    },
-    configStickLengthText() {
-      const length = this.liftingHeightInput.value;
-      return {
-        text: `${length}м`,
-        fontSize: 14 / this.coefficient,
-        fontStyle: "bold",
-        fill: "#27262C",
-        x: this.size.width - (!this.mobileVersion ? 64 : 59),
-        y: (this.size.height - 20) / 2,
+        x:
+          (this.headPosition.x - this.offset.x) / 2 +
+          this.offset.x -
+          15 / this.coefficient,
+        y: this.headPosition.y - (this.mobileVersion ? 20 : 25),
       };
     },
   },
@@ -296,7 +355,7 @@ export default {
     moveObject(grab) {
       this.drag = true;
       this.changeCargoGroupPosition(grab);
-      this.updateInputValue();
+      // this.updateInputValue();
     },
     edgeDistance(grab, side) {
       if (grab === "head") {
@@ -310,10 +369,10 @@ export default {
       const grabRef = this.$refs[grab].getNode();
       const cargoGroup = this.$refs.cargoGroup.getNode();
 
-      const maxX = this.mobileVersion ? 207 : 395;
-      const minX = 268 / this.coefficient;
-      const minY = 20 / this.coefficient;
-      const maxY = 268 / this.coefficient;
+      const maxX = this.size.width - (this.mobileVersion ? 65 : 115);
+      const minX = 278 / this.coefficient;
+      const minY = this.mobileVersion ? 24 : 30;
+      const maxY = 245 / this.coefficient;
 
       let posX = cargoGroup.x() + grabRef.x() - this.edgeDistance(grab, "x");
       let posY = cargoGroup.y() + grabRef.y() - this.edgeDistance(grab, "y");
@@ -327,13 +386,21 @@ export default {
       cargoGroup.y(posY);
       grabRef.x(this.edgeDistance(grab, "x"));
       grabRef.y(this.edgeDistance(grab, "y"));
+
       this.headPosition = {
         x: cargoGroup.x() + this.edgeDistance("head", "x"),
         y: cargoGroup.y() + 2.3 / this.coefficient,
       };
-      const meterHeight = this.mobileVersion ? 0.745 : 0.395;
+
+      this.loadDistanceWidth = this.headPosition.x - this.offset.x;
+
+      const meterHeight = 98 / (maxY - minY);
       this.liftingHeightInput.value =
-        Math.round(meterHeight * (268 / this.coefficient - cargoGroup.y())) + 1;
+        Math.round((maxY - posY) * meterHeight) + 1;
+
+      const unitMeters = 80 / (maxX - minX);
+      this.stickLengthInput.value = Math.round((posX - minX) * unitMeters) + 4;
+
       this.changeBasePosition(cargoGroup.x(), cargoGroup.y());
     },
     changeBasePosition(cargoGroupX, cargoGroupY) {
@@ -346,64 +413,49 @@ export default {
       this.rotation = Math.atan(length / height) * 57.2958 + 1.3;
       this.stickLength = totalBaseLength - this.mainLength;
     },
-    updateInputValue() {
-      const defaultStickLength = this.mobileVersion ? 26.95 : 46.88;
-      const maxStickLength = this.mobileVersion ? 150 : 282;
-      let meterLength = (maxStickLength - defaultStickLength) / 80;
-      this.stickLengthInput.value = (
-        (this.stickLength - defaultStickLength) / meterLength +
-        4
-      ).toFixed(0);
-    },
     changeConfig() {
       this.configKonva = this.size;
     },
     sizeCalculation() {
       const cargoGroup = this.$refs.cargoGroup.getNode();
       let stickLength = Number(this.stickLengthInput.value);
-      const defaultStickLength = this.mobileVersion ? 26.95 : 46.88;
-      const maxStickLength = this.mobileVersion ? 150 : 282;
-      let meterLength = (maxStickLength - defaultStickLength) / 80;
-      const defaultRotation = -16.61;
-      const maxAngel = -38.82;
-      const anglePerMeter = (
-        (maxAngel - defaultRotation) /
-        stickLength
-      ).toFixed(2);
-      const length = (stickLength - 4) * meterLength + defaultStickLength;
-      this.stickLength =
-        length >= defaultStickLength ? length : defaultStickLength;
+      let liftingHeight = Number(this.liftingHeightInput.value);
 
-      const angle = (stickLength - 4) * anglePerMeter + defaultRotation;
-      this.rotation = angle < defaultRotation ? angle - 1.3 : defaultRotation;
+      const maxX = this.size.width - (this.mobileVersion ? 65 : 115);
+      const minX = 278 / this.coefficient;
+      const minY = this.mobileVersion ? 24 : 30;
+      const maxY = 245 / this.coefficient;
 
-      const position = {
-        x:
-          (this.mainLength + this.stickLength + this.offset.x) *
-          Math.sin((90 + this.rotation) * (Math.PI / 180)),
-        y:
-          -1 *
-            (this.mainLength + this.stickLength) *
-            Math.cos((90 + this.rotation) * (Math.PI / 180)) +
-          this.offset.y,
-      };
-      if (this.input !== "liftingHeight") {
-        this.liftingHeightInput.value =
-          stickLength < 4 ? 1 : Math.round(stickLength * 1.225) - 4;
-      } else {
-        this.$emit("textInput", false);
-      }
-      cargoGroup.x(position.x - this.edgeDistance("head", "x"));
-      cargoGroup.y(position.y - 6.3 / this.coefficient);
+      const meterHeight = 98 / (maxY - minY);
+      const posY = maxY - (liftingHeight - 1) / meterHeight;
+      cargoGroup.y(posY);
+
+      const unitMeters = 80 / (maxX - minX);
+      const posX = (stickLength - 4) / unitMeters + minX;
+      cargoGroup.x(posX);
+
+      const heightTriangle = this.offset.y - posY;
+      const widthTriangle =
+        posX - this.offset.x + this.edgeDistance("head", "x");
+      const fullLength = Math.sqrt(
+        Math.pow(heightTriangle, 2) + Math.pow(widthTriangle, 2)
+      );
+      this.stickLength = fullLength - 239 / this.coefficient;
+
+      this.rotation =
+        -1 * ((Math.atan(heightTriangle / widthTriangle) * 180) / Math.PI) +
+        1.3;
+
       this.headPosition = {
-        x: position.x,
-        y: position.y - 4 / this.coefficient,
+        x: posX + this.edgeDistance("head", "x"),
+        y: posY + 2.3,
       };
     },
   },
   watch: {
     size() {
       this.changeConfig();
+      this.sizeCalculation();
     },
     mobileVersion() {
       this.mobileResize();
@@ -415,9 +467,8 @@ export default {
       }
     },
     "liftingHeightInput.value"() {
-      if (!this.drag && this.input === "liftingHeight") {
-        this.stickLengthInput.value =
-          Math.round(Number(this.liftingHeightInput.value) / 1.225) + 3;
+      if (!this.drag) {
+        this.sizeCalculation();
       }
     },
   },

@@ -58,9 +58,6 @@ export default {
       default: false,
     },
   },
-  emits: {
-    textInput: String,
-  },
   computed: {},
   methods: {
     isNumber: function (evt) {
@@ -77,7 +74,6 @@ export default {
       }
     },
     inputValidation(id, num) {
-      this.$emit("textInput", id);
       let param = this.parameter.find((item) => item.id === id);
       if (id === "liftingHeight") {
         Number(num) > 99
