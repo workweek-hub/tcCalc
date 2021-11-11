@@ -410,7 +410,9 @@ export default {
       const totalBaseLength = Math.sqrt(
         Math.pow(length, 2) + Math.pow(height, 2)
       );
-      this.rotation = Math.atan(length / height) * 57.2958 + 1.3;
+      this.rotation =
+        (Math.atan(length / height) * 180) / Math.PI +
+        (this.mobileVersion && this.stickLength > 240 ? 0.9 : 1.3);
       this.stickLength = totalBaseLength - this.mainLength;
     },
     changeConfig() {
@@ -444,7 +446,7 @@ export default {
 
       this.rotation =
         -1 * ((Math.atan(heightTriangle / widthTriangle) * 180) / Math.PI) +
-        1.3;
+        (this.mobileVersion && this.stickLength > 240 ? 0.9 : 1.3);
 
       this.headPosition = {
         x: posX + this.edgeDistance("head", "x"),
