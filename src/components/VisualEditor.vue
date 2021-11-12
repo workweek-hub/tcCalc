@@ -1,6 +1,8 @@
 <template>
   <v-stage :config="configKonva">
     <v-layer>
+      <v-line :config="configCraneCenter"></v-line>
+
       <v-line :config="configLiftLine"></v-line>
       <v-image :config="configLiftArrow"></v-image>
       <v-text :config="configLiftText"></v-text>
@@ -126,6 +128,18 @@ export default {
     });
   },
   computed: {
+    configCraneCenter() {
+      return {
+        points: [
+          this.offset.x + (this.mobileVersion ? 38 : 68),
+          this.headPosition.y - (this.mobileVersion ? 20 : 25),
+          this.offset.x + (this.mobileVersion ? 38 : 68),
+          this.configKonva.height - 30,
+        ],
+        strokeWidth: 1,
+        stroke: "#ffd5d5",
+      };
+    },
     configLiftLine() {
       return {
         points: [
@@ -171,7 +185,7 @@ export default {
         image: this.arrowLen,
         width: width,
         height: height,
-        x: this.offset.x + (this.mobileVersion ? 3 : 5),
+        x: this.offset.x + (this.mobileVersion ? 46 : 80),
         y: this.headPosition.y - (this.mobileVersion ? 3.3 : 1),
         rotation: 180,
       };
@@ -190,7 +204,7 @@ export default {
     configLoadDistance() {
       return {
         points: [
-          this.offset.x,
+          this.offset.x + (this.mobileVersion ? 45 : 75),
           this.headPosition.y - 6,
           this.headPosition.x,
           this.headPosition.y - 6,
@@ -337,7 +351,10 @@ export default {
         fontStyle: "bold",
         fill: "#27262C",
         x:
-          (this.headPosition.x - this.offset.x) / 2 +
+          (this.headPosition.x -
+            this.offset.x +
+            (this.mobileVersion ? 40 : 70)) /
+            2 +
           this.offset.x -
           15 / this.coefficient,
         y: this.headPosition.y - (this.mobileVersion ? 20 : 25),
@@ -394,12 +411,12 @@ export default {
 
       this.loadDistanceWidth = this.headPosition.x - this.offset.x;
 
-      const meterHeight = 98 / (maxY - minY);
+      const meterHeight = 83 / (maxY - minY);
       this.liftingHeightInput.value =
         Math.round((maxY - posY) * meterHeight) + 1;
 
-      const unitMeters = 80 / (maxX - minX);
-      this.stickLengthInput.value = Math.round((posX - minX) * unitMeters) + 4;
+      const unitMeters = 76 / (maxX - minX);
+      this.stickLengthInput.value = Math.round((posX - minX) * unitMeters) + 2;
 
       this.changeBasePosition(cargoGroup.x(), cargoGroup.y());
     },
@@ -428,12 +445,12 @@ export default {
       const minY = this.mobileVersion ? 24 : 30;
       const maxY = 245 / this.coefficient;
 
-      const meterHeight = 98 / (maxY - minY);
+      const meterHeight = 83 / (maxY - minY);
       const posY = maxY - (liftingHeight - 1) / meterHeight;
       cargoGroup.y(posY);
 
-      const unitMeters = 80 / (maxX - minX);
-      const posX = (stickLength - 4) / unitMeters + minX;
+      const unitMeters = 76 / (maxX - minX);
+      const posX = (stickLength - 2) / unitMeters + minX;
       cargoGroup.x(posX);
 
       const heightTriangle = this.offset.y - posY;

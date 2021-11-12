@@ -76,18 +76,13 @@ export default {
     inputValidation(id, num) {
       let param = this.parameter.find((item) => item.id === id);
       if (id === "liftingHeight") {
-        Number(num) > 99
-          ? (param.value = 99)
-          : (param.value = Number(num).toFixed(0));
-      }
-      if (id === "cargoHeight") {
-        Number(num) > 99
-          ? (param.value = 99)
+        Number(num) > 84
+          ? (param.value = 84)
           : (param.value = Number(num).toFixed(0));
       }
       if (id === "stickLength") {
-        Number(num) > 84
-          ? (param.value = 84)
+        Number(num) > 78
+          ? (param.value = 78)
           : (param.value = Number(num).toFixed(0));
       }
       if (id === "cargoWeight") {
@@ -99,8 +94,8 @@ export default {
 
     defaultNumber(id, num) {
       let param = this.parameter.find((item) => item.id === id);
-      if (id === "stickLength" && Number(num) < 4) {
-        param.value = 4;
+      if (id === "stickLength" && Number(num) < 2) {
+        param.value = 2;
       }
       if (id === "liftingHeight" && Number(num) < 1) {
         param.value = 1;

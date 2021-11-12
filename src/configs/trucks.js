@@ -1,5 +1,6 @@
 export const trucks = [
   {
+    id: 1,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/bif-arenda-avtokrana-500-tonn.jpg",
     name: "Liebherr LTM 1500-8.1",
     weightLimit: 500,
@@ -7,6 +8,7 @@ export const trucks = [
     url: "https://bifgroup.ru/500-tonn/liebherr-ltm-1500-81",
   },
   {
+    id: 2,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/300tn_groovegmk6300l-1.jpg",
     name: "GMK 6300L-1",
     weightLimit: 300,
@@ -14,6 +16,7 @@ export const trucks = [
     url: "https://bifgroup.ru/300-tonn/grove-gmk-6300l-1",
   },
   {
+    id: 3,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/arenda_avtokrana_bif_200_tonn.jpg",
     name: "Liebherr LTM 1200-5.1",
     weightLimit: 200,
@@ -21,6 +24,7 @@ export const trucks = [
     url: "https://bifgroup.ru/200-tonn/liebherr-ltm-1200-51",
   },
   {
+    id: 4,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/avtokran_220_tonn_1.jpg",
     name: "Автокран Grove GMK6220L",
     weightLimit: 220,
@@ -28,6 +32,7 @@ export const trucks = [
     url: "https://bifgroup.ru/220-tonn/grove-gmk6220l",
   },
   {
+    id: 5,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/ltm1250_b1.jpg",
     name: "Liebherr LTM 1250-6.1",
     weightLimit: 250,
@@ -35,6 +40,7 @@ export const trucks = [
     url: "https://bifgroup.ru/250-tonn/liebherr_ltm_1250",
   },
   {
+    id: 6,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/arenda_avtokrana_bif_160_tonn.jpg",
     name: "Liebherr LTM 1160-5.1",
     weightLimit: 160,
@@ -42,6 +48,7 @@ export const trucks = [
     url: "https://bifgroup.ru/160-tonn/liebherr-ltm-1160-51",
   },
   {
+    id: 7,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/avtokran_100_tonn_grove_gmk4100l_1_0_0.jpg",
     name: "Автокран Grove GMK4100L",
     weightLimit: 100,
@@ -49,6 +56,7 @@ export const trucks = [
     url: "https://bifgroup.ru/100-tonn/grove-gmk4100l",
   },
   {
+    id: 8,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/arenda_avtokrana_bif_130_tonn.jpg",
     name: "Liebherr LTM 1130-5.1",
     weightLimit: 130,
@@ -56,6 +64,7 @@ export const trucks = [
     url: "https://bifgroup.ru/130-tonn/liebherr-ltm-1130-51",
   },
   {
+    id: 9,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/bif-arenda-avtokrana-220-tonn.jpg",
     name: "Liebherr LTM 1220-5.2",
     weightLimit: 220,
@@ -63,6 +72,7 @@ export const trucks = [
     url: "https://bifgroup.ru/220-tonn/liebherr-ltm-1220-52",
   },
   {
+    id: 10,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/arenda_avtokrana_bif_350_terex_tonn.jpg",
     name: "Terex-Demag AC 350",
     weightLimit: 350,
@@ -70,6 +80,7 @@ export const trucks = [
     url: "https://bifgroup.ru/350-tonn/terex-demag-ac-350",
   },
   {
+    id: 11,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/arenda_avtokrana_bif_100_tonn.jpg",
     name: "Liebherr LTM 1100-5.1",
     weightLimit: 100,
@@ -77,6 +88,7 @@ export const trucks = [
     url: "https://bifgroup.ru/100-tonn/liebherr-ltm-1100-51",
   },
   {
+    id: 12,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/4276_6886595877158.jpg",
     name: "Grove GMK 4080-1",
     weightLimit: 80,
@@ -84,6 +96,7 @@ export const trucks = [
     url: "https://bifgroup.ru/80-tonn/grove-gmk-4080-1",
   },
   {
+    id: 13,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/80et_grovegmk4080.jpg",
     name: "Grove GMK 4080",
     weightLimit: 80,
@@ -91,6 +104,7 @@ export const trucks = [
     url: "https://bifgroup.ru/80-tonn/grove-gmk-4080",
   },
   {
+    id: 14,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/7657.jpg",
     name: "Автокран Liebherr LTM 1070-4.1",
     weightLimit: 70,
@@ -98,6 +112,7 @@ export const trucks = [
     url: "https://bifgroup.ru/70-tonn/liebherr-ltm-1070-42",
   },
   {
+    id: 15,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/bif_arenda_avtokrana_90tonn_liebherr_1090.jpg",
     name: "Liebherr LTM 1090-4.1",
     weightLimit: 90,
@@ -105,6 +120,7 @@ export const trucks = [
     url: "https://bifgroup.ru/90-tonn/liebherr-ltm-1090-41",
   },
   {
+    id: 16,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/avtokran_xcmg_xct70_s.png",
     name: "Автокран XCMG XCT70 S",
     weightLimit: 70,
@@ -112,6 +128,7 @@ export const trucks = [
     url: "https://bifgroup.ru/70-tonn/xcmg-xct70-s",
   },
   {
+    id: 17,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/1060_1_0.jpg",
     name: "Автокран Liebherr LTM 1060-2",
     weightLimit: 60,
@@ -119,13 +136,15 @@ export const trucks = [
     url: "https://bifgroup.ru/60-tonn/liebherr-ltm-1060-31",
   },
   {
+    id: 18,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/xcmg_1_1.jpg",
-    name: "Автокран XCMG",
-    weightLimit: 40,
+    name: "Автокран XCMG QY40K",
+    weightLimit: 30,
     stickLength: 40,
     url: "https://bifgroup.ru/40-tonn/xcmg",
   },
   {
+    id: 19,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/arenda-avtokrana-50_1.jpg",
     name: "Автокран Liebherr LTM 1050-3.1",
     weightLimit: 50,
@@ -133,6 +152,7 @@ export const trucks = [
     url: "https://bifgroup.ru/50-tonn/liebherr-ltm-1050-31",
   },
   {
+    id: 20,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/arenda-avtokrana-40-tonn_0_0.jpg",
     name: "Автокран Terex AC 40/2L",
     weightLimit: 40,
@@ -140,6 +160,7 @@ export const trucks = [
     url: "https://bifgroup.ru/40-tonn/terex-ac-402l",
   },
   {
+    id: 21,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/avtokran_45_tonn_liebherr_1045-31_1.jpg",
     name: "Автокран LIEBHERR LTM 1045-3.1",
     weightLimit: 45,
@@ -147,6 +168,7 @@ export const trucks = [
     url: "https://bifgroup.ru/45-tonn/liebherr-ltm-1045-31",
   },
   {
+    id: 22,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/arenda-krana-vezdehoda-25-tonn_1_0.jpg",
     name: "Галичанин 25 т /31 м (КС-55713-5В-4) - вездеход",
     weightLimit: 25,
@@ -154,6 +176,7 @@ export const trucks = [
     url: "https://bifgroup.ru/25-tonn/galichanin-25t-31m",
   },
   {
+    id: 23,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/arenda-avtokrana-40_1.jpg",
     name: "Terex-Demag AC-40 City",
     weightLimit: 40,
@@ -161,13 +184,7 @@ export const trucks = [
     url: "https://bifgroup.ru/40-tonn/terex-demag-ac-40-city",
   },
   {
-    src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/galichanin_32tonns_gusek_1.jpg",
-    name: "Галичанин 32 т / 30,2 м + 9 м (КС-55729-1В)",
-    weightLimit: 32,
-    stickLength: 30.2,
-    url: "https://bifgroup.ru/32-tonny/galichanin-302-m-9m",
-  },
-  {
+    id: 24,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/32tn_galichanin.jpg",
     name: "Галичанин 32 т / 30,2 м (Галичанин КС-55729-5В)",
     weightLimit: 32,
@@ -175,6 +192,7 @@ export const trucks = [
     url: "https://bifgroup.ru/32-tonny/galichanin-ks-55729-5v",
   },
   {
+    id: 25,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/galichanin_32tonns_1.jpg",
     name: "Галичанин 32 т / 30,2 м (Галичанин КС-55729-1В)",
     weightLimit: 32,
@@ -182,6 +200,7 @@ export const trucks = [
     url: "https://bifgroup.ru/32-tonny/galichanin-302-m",
   },
   {
+    id: 26,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/kc55713-5_2019_2.jpg",
     name: "Галичанин 25 т. /28,0 м (KC-55713-5В ) - вездеход",
     weightLimit: 25,
@@ -189,6 +208,7 @@ export const trucks = [
     url: "https://bifgroup.ru/25-tonn/galichanin-25t-28m",
   },
   {
+    id: 27,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/25_28_1_0.jpg",
     name: "Галичанин 25 т / 28 м (Галичанин КС-55713-1В)",
     weightLimit: 25,
@@ -196,6 +216,7 @@ export const trucks = [
     url: "https://bifgroup.ru/25-tonn/galichanin-kamaz-28-m",
   },
   {
+    id: 28,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/kilinci_25tonn_28metrov_gusek_1.jpg",
     name: "Клинцы 25 т / 28 м + 9 м (Клинцы КС-55713-1К2)",
     weightLimit: 25,
@@ -203,6 +224,7 @@ export const trucks = [
     url: "https://bifgroup.ru/25-tonn/klincy-kamaz-28-m",
   },
   {
+    id: 29,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/galichanin-kamaz2179.jpg",
     name: "Галичанин-Камаз 25 т / 21,7 м + 9 м (КС-55713)",
     weightLimit: 25,
@@ -210,6 +232,7 @@ export const trucks = [
     url: "https://bifgroup.ru/25-tonn/galichanin-kamaz-217-m",
   },
   {
+    id: 30,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/21_galichanin_maz_0.jpg",
     name: "Галичанин-Маз 25 т / 21,7 + 9 м (Галичанин КС-55713-6)",
     weightLimit: 25,
@@ -217,6 +240,7 @@ export const trucks = [
     url: "https://bifgroup.ru/25-tonn/galichanin-maz-217-m",
   },
   {
+    id: 31,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/bif-arenda-avtokrana-25-tonn-1.jpg",
     name: "Галичанин-Камаз 25 т / 21,7 м (Галичанин КС-55713-1)",
     weightLimit: 25,
@@ -224,6 +248,7 @@ export const trucks = [
     url: "https://bifgroup.ru/25-tonn/galichanin-kamaz-25-t-217-m",
   },
   {
+    id: 32,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/bif-arenda-avtokrana-25-tonn-vezdehod.jpg",
     name: "Клинцы (вездеход) 25 т / 21,7 м (Клинцы КС-55713-5К)",
     weightLimit: 25,
@@ -231,6 +256,7 @@ export const trucks = [
     url: "https://bifgroup.ru/25-tonn/klincy-kamaz-vezdehod-217-m",
   },
   {
+    id: 33,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/arenda-avtokrana-klincy-25-tonn.jpg",
     name: "Клинцы 25 т / 21,7 м (Клинцы КС-55713-1К-1)",
     weightLimit: 25,

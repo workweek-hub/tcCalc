@@ -41,6 +41,7 @@
         </div>
       </template>
       <div
+        id="list"
         class="cards-wrapper"
         :style="{
           gridTemplateColumns: cardCol,
@@ -62,6 +63,7 @@ import RentTruckCrane from "@/components/RentTruckCrane";
 import VisualEditor from "@/components/VisualEditor";
 import TruckCraneCard from "@/components/TruckCraneCard";
 import { trucks } from "@/configs/trucks";
+import { GetList } from "./api";
 
 export default {
   name: "App",
@@ -82,7 +84,7 @@ export default {
       parameter: [
         { id: "cargoWeight", title: "Вес груза, т:", value: 0.1 },
         { id: "liftingHeight", title: "Высота подъёма, м:", value: 1 },
-        { id: "stickLength", title: "Вылет, м:", value: 4 },
+        { id: "stickLength", title: "Вылет, м:", value: 2 },
       ],
       truckCranes: trucks,
       filteredList: [],
@@ -94,22 +96,44 @@ export default {
   },
   methods: {
     filterList() {
-      let newList = [];
       const cargoWeight = this.parameter.find(
         (item) => item.id === "cargoWeight"
       ).value;
       const stickLength = this.parameter.find(
         (item) => item.id === "stickLength"
       ).value;
-      for (let truck of this.truckCranes) {
-        if (
-          truck.weightLimit >= Number(cargoWeight) &&
-          truck.stickLength >= Number(stickLength)
-        ) {
-          newList.push(truck);
+      const liftingHeight = this.parameter.find(
+        (item) => item.id === "liftingHeight"
+      ).value;
+      GetList(
+        {
+          radius: Number(stickLength),
+          weight: Number(cargoWeight),
+          height: Number(liftingHeight),
+        },
+        async (res) => {
+          if (res.list.length > 0) {
+            let newList = [];
+            for await (let id of res.list) {
+              let crane = this.truckCranes.find((item) => item.id === id);
+              if (crane) {
+                newList.push(crane);
+              }
+            }
+            this.filteredList = newList;
+            if (res.list.length > 6) {
+              setTimeout(() => {
+                document.getElementById("list").scrollIntoView({
+                  behavior: "smooth",
+                });
+              }, 300)
+            }
+          } else {
+            // console.log("Not found");
+            this.filteredList = [];
+          }
         }
-      }
-      this.filteredList = newList;
+      );
     },
     getParam(id) {
       return this.parameter.find((item) => item.id === id);
