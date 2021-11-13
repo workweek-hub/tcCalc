@@ -41,7 +41,6 @@
         </div>
       </template>
       <div
-        id="list"
         class="cards-wrapper"
         :style="{
           gridTemplateColumns: cardCol,
@@ -54,6 +53,17 @@
         </div>
       </div>
     </div>
+    <transition name="message">
+      <div
+        class="err-message"
+        v-if="message"
+        :style="{
+          margin: moduleWidth < widthMobileVersion ? '20px' : '0',
+        }"
+      >
+        {{ message }}
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -88,6 +98,7 @@ export default {
       ],
       truckCranes: trucks,
       filteredList: [],
+      message: "",
     };
   },
   mounted() {
@@ -121,16 +132,14 @@ export default {
               }
             }
             this.filteredList = newList;
-            if (res.list.length > 6) {
-              setTimeout(() => {
-                document.getElementById("list").scrollIntoView({
-                  behavior: "smooth",
-                });
-              }, 300)
-            }
+            this.message = "";
           } else {
-            // console.log("Not found");
             this.filteredList = [];
+            this.message =
+              "Автокран по указанным Вами параметрам не найден. Измените данные или позвоните нам и мы обязательно вам поможем.";
+            setTimeout(() => {
+              this.message = "";
+            }, 10000);
           }
         }
       );
@@ -229,5 +238,23 @@ body {
   &-bottom {
     margin-top: 5px;
   }
+}
+.err-message {
+  border: 1px solid #df1120;
+  padding: 25px;
+  border-radius: 2px;
+  text-align: center;
+  background-color: #fce7e8;
+  font-size: 14px;
+  color: #df1120;
+}
+
+.message-enter-active,
+.message-leave-active {
+  transition: opacity 0.5s;
+}
+.message-enter,
+.message-leave-to {
+  opacity: 0;
 }
 </style>

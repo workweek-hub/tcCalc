@@ -386,7 +386,10 @@ export default {
       const grabRef = this.$refs[grab].getNode();
       const cargoGroup = this.$refs.cargoGroup.getNode();
 
-      const maxX = this.size.width - (this.mobileVersion ? 65 : 115);
+      const maxX =
+        this.mobileVersion && this.size.width > 515
+          ? 460
+          : this.size.width - (this.mobileVersion ? 65 : 115);
       const minX = 278 / this.coefficient;
       const minY = this.mobileVersion ? 24 : 30;
       const maxY = 245 / this.coefficient;
@@ -440,7 +443,10 @@ export default {
       let stickLength = Number(this.stickLengthInput.value);
       let liftingHeight = Number(this.liftingHeightInput.value);
 
-      const maxX = this.size.width - (this.mobileVersion ? 65 : 115);
+      const maxX =
+        this.mobileVersion && this.size.width > 515
+          ? 460
+          : this.size.width - (this.mobileVersion ? 65 : 115);
       const minX = 278 / this.coefficient;
       const minY = this.mobileVersion ? 24 : 30;
       const maxY = 245 / this.coefficient;

@@ -200,6 +200,14 @@ export const trucks = [
     url: "https://bifgroup.ru/32-tonny/galichanin-302-m",
   },
   {
+    id: 25.1,
+    src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/galichanin_32tonns_gusek_1.jpg",
+    name: "Галичанин 32 т / 30,2 м + 9 м (КС-55729-1В)",
+    weightLimit: 32,
+    stickLength: 30.2,
+    url: "https://bifgroup.ru/32-tonny/galichanin-302-m-9m",
+  },
+  {
     id: 26,
     src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/kc55713-5_2019_2.jpg",
     name: "Галичанин 25 т. /28,0 м (KC-55713-5В ) - вездеход",
