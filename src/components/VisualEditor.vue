@@ -55,9 +55,11 @@ export default {
       type: Object,
       required: true,
     },
-  },
-  emits: {
-    textInput: Boolean,
+    call: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   data() {
     return {
@@ -105,8 +107,18 @@ export default {
     head.addEventListener("dragmove", () => {
       this.moveObject("head");
     });
+    head.addEventListener("dragend", () => {
+      if (this.call) {
+        this.$emit("getList");
+      }
+    });
     cargo.addEventListener("dragmove", () => {
       this.moveObject("cargo");
+    });
+    cargo.addEventListener("dragend", () => {
+      if (this.call) {
+        this.$emit("getList");
+      }
     });
     head.addEventListener("dragend", () => {
       this.drag = false;

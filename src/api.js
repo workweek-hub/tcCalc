@@ -18,8 +18,8 @@ export const GetList = (size, cb) => {
 
   axios(config)
     .then(function (response) {
-      if(response) {
-        cb(response.data)
+      if (response) {
+        cb(response.data);
       }
     })
     .catch(function (error) {

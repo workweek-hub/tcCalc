@@ -13,6 +13,8 @@
         <parameter-input
           :parameter="parameter"
           :mobileVersion="moduleWidth < widthMobileVersion"
+          :call="call"
+          @getList="filterList()"
         >
           <template v-if="moduleWidth >= widthMobileVersion">
             <div class="rent-container">
@@ -33,6 +35,8 @@
           :stickLengthInput="getParam('stickLength')"
           :cargoWeightInput="getParam('cargoWeight')"
           :liftingHeightInput="getParam('liftingHeight')"
+          :call="call"
+          @getList="filterList()"
         />
       </div>
       <template v-if="moduleWidth < widthMobileVersion">
@@ -40,6 +44,9 @@
           <rent-truck-crane @filterOut="filterList" />
         </div>
       </template>
+      <div v-if="minWeight" class="truck-filtered">
+        От {{ minWeight }} тонн и больше
+      </div>
       <div
         class="cards-wrapper"
         :style="{
@@ -99,6 +106,8 @@ export default {
       truckCranes: trucks,
       filteredList: [],
       message: "",
+      call: false,
+      minWeight: "",
     };
   },
   mounted() {
@@ -106,7 +115,15 @@ export default {
     window.addEventListener("resize", this.changeWidthCraneSection);
   },
   methods: {
+    sortNewList(list) {
+      return list.sort(function (a, b) {
+        return a.weightLimit - b.weightLimit;
+      });
+    },
     filterList() {
+      if (!this.call) {
+        this.call = true;
+      }
       const cargoWeight = this.parameter.find(
         (item) => item.id === "cargoWeight"
       ).value;
@@ -125,15 +142,21 @@ export default {
         async (res) => {
           if (res.list.length > 0) {
             let newList = [];
+            let weightArr = [];
             for await (let id of res.list) {
               let crane = this.truckCranes.find((item) => item.id === id);
+              weightArr.push(crane.weightLimit);
               if (crane) {
                 newList.push(crane);
               }
             }
+            weightArr.sort((a, b) => a - b);
+            newList = await this.sortNewList(newList);
+            this.minWeight = weightArr[0];
             this.filteredList = newList;
             this.message = "";
           } else {
+            this.minWeight = "";
             this.filteredList = [];
             this.message =
               "Автокран по указанным Вами параметрам не найден. Измените данные или позвоните нам и мы обязательно вам поможем.";
@@ -209,7 +232,7 @@ body {
   display: grid;
   gap: 24px;
   justify-content: space-between;
-  margin-top: 25px;
+  margin-top: 10px;
 }
 .calc {
   &-container {
@@ -256,5 +279,13 @@ body {
 .message-enter,
 .message-leave-to {
   opacity: 0;
+}
+.truck-filtered {
+  font-size: 14px;
+  margin-top: 10px;
+  padding: 10px 15px;
+  background: #f1f1f1;
+  width: max-content;
+  border-radius: 2px;
 }
 </style>

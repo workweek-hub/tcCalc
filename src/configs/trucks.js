@@ -25,7 +25,7 @@ export const trucks = [
   },
   {
     id: 4,
-    src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/avtokran_220_tonn_1.jpg",
+    src: "https://bifgroup.ru/sites/default/files/styles/gallery/public/avtokran_220_tonn_2.jpg",
     name: "Автокран Grove GMK6220L",
     weightLimit: 220,
     stickLength: 72,

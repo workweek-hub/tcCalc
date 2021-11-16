@@ -9,9 +9,7 @@
     <div
       class="truck-image"
       :style="{
-        background: `url(${truck.src})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
+        background: `url(${truck.src})`
       }"
     ></div>
     <h5>
@@ -54,6 +52,7 @@ export default {
   padding-bottom: 15px;
   .truck-image {
     height: 160px;
+    background-size: cover!important;
   }
   > h5 {
     font-size: 15px;

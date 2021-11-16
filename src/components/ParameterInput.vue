@@ -57,6 +57,11 @@ export default {
       required: true,
       default: false,
     },
+    call: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   computed: {},
   methods: {
@@ -89,6 +94,9 @@ export default {
         Number(num) > 500
           ? (param.value = 500)
           : (param.value = num.replace(/(\.\d)\d+/g, "$1"));
+      }
+      if (this.call) {
+        this.$emit("getList");
       }
     },
 
